@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Results</h1>
+    <p>Automatically refreshes every 30 seconds.</p>
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-hover">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Success</th>
+                    <th scope="col">Attempts</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for score in scores: %}
+                <tr>
+                    <th scope="row"> {{score[3].username}} </th>
+                    <td>{{score[1]}}</td>
+                    <td>{{score[2]}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <head>
+    <meta http-equiv="refresh" content="30">
+    </head>
+{% endblock content %}

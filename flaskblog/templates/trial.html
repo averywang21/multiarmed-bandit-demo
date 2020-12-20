@@ -1,0 +1,187 @@
+{% extends "layout.html" %}
+{% block content %}
+
+  <article class="media content-section">
+    <div class="container">
+      <h1>Multi-armed Bandit Trial: Game {{game_number}}</h1>
+      <div class="row">
+        <div class="col">
+          <h4>Current Score: {{total_success}}</h4>
+        </div>
+        <div class="col">
+          <h4>Attempts Remaining: {{total_attempts_allowed - total_attempts}}</h4>
+        </div>
+        <div class="col">
+        <form action="{{url_for('trials.show_trial', ci=0.5)}}" id="game_form">
+          <div class="row">
+            <div class="col-8">
+            <select class="form-select" name="game_number" form="game_form">
+              <option value="0">One</option>
+              <option value="1">Two</option>
+              <option value="2">Three</option>
+            </select>
+          </div>
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary">Reload</button>
+          </div>
+          </div> 
+        </form>
+          
+        </div>
+      </div>
+      <br>
+
+      <div class="row"> 
+        <div class="col-sm-12">
+          <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{100*total_success/total_attempts_allowed}}%" aria-valuenow="{{100*total_success/total_attempts_allowed}}" aria-valuemin="0" aria-valuemax="100">{{total_success}}</div>
+            <!--div class="progress-bar bg-secondary" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">7</div-->
+            <div class="progress-bar bg-danger" role="progressbar" style="width: {{100*(total_attempts-total_success)/total_attempts_allowed}}%" aria-valuenow="{{100*(total_attempts-total_success)/total_attempts_allowed}}" aria-valuemin="0" aria-valuemax="100">{{(total_attempts-total_success)}}</div>
+          </div>
+        </div>
+        <hr>
+      </div>
+      
+      <div class="row">
+        <div class="col-sm-12">
+          <table class="table table-hover">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Success/Attempts</th>
+                  <th scope="col">Estimated Probability<sup>*</sup></th>
+                  <th scope="row">
+                      <div class="dropdown">
+                        <div class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{"{:.0f}".format(ci*100)}}% Confidence Interval
+                        </div>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="{{url_for('trials.show_trial', ci=0.5, game_number=game_number)}}">50% Confidence Interval</a>
+                            <a class="dropdown-item" href="{{url_for('trials.show_trial', ci=0.75, game_number=game_number)}}">75% Confidence Interval</a>
+                            <a class="dropdown-item" href="{{url_for('trials.show_trial', ci=0.9, game_number=game_number)}}">90% Confidence Interval</a>
+                            <a class="dropdown-item" href="{{url_for('trials.show_trial', ci=0.95, game_number=game_number)}}">95% Confidence Interval</a>
+                        </div>
+                      </div>
+                    
+                    </th>
+                  <th scope="col">Action</th>
+                  <th scope="col">Last Result</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for machine in machines: %}
+                <tr>
+                    <th scope="row">Machine {{machine.machine_number}}</th>
+                    <td>{{machine.success_count}}/{{machine.total_count}}</td>
+                    {% if machine.total_count == 0 %}
+                        <td>0.500</td>
+                    {% else %}
+                        <td>{{"{:.3f}".format((machine.success_count+1) / (machine.total_count+2))}}</td>
+                    {% endif %}
+                    <td>[{{"{:.3f}".format(confidence_intervals[machine][0])}}, {{"{:.3f}".format(confidence_intervals[machine][1])}}]</td>
+                    <td>
+                        {% if total_attempts < total_attempts_allowed %}
+                        <a href="{{url_for('trials.pull_machine_trial', pull_machine=machine.machine_number, ci=ci, game_number=game_number)}}">
+                            <button type="button" class="btn btn-outline-primary btn-sm">Pull Lever</button>
+                        </a>
+                        {% else %}
+                        <button type="button" class="btn btn-outline-secondary btn-sm disabled">Complete</button>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if last_action == machine.machine_number %}
+                            {% if last_action_success %}
+                                <span class="badge rounded-pill bg-success text-light">Success</span>
+                            {% else %}
+                                <span class="badge rounded-pill bg-danger text-light">Failure</span>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+          <small>* Assuming prior of U[0, 1], probability uses Laplace smoothing.</small>
+        </div>
+      </div>
+
+      
+    </div>
+  </article>
+
+  <!--
+    <hr>
+      <p>
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">
+          Alpha Predictors
+        </a>
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2">
+          Team Performance
+        </a>
+      </p>
+      <div class="collapse" id="collapseExample1">
+        <div class="card card-body">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm">
+                <h3>MNME</h3>0.45
+              </div>
+              <div class="col-sm">
+                <h3>BRC3</h3>-442
+              </div>
+              <div class="col-sm">
+                <h3>NCSI</h3>15.13
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="collapse" id="collapseExample2">
+        <div class="card card-body">
+          <table class="table table-hover">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Score</th>
+                <th scope="col">Average Probability</th>
+                <th scope="col">Average Regret</th>
+                <th scope="col">Progress</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <th>Aggregate</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+                <td>@fat</td>
+            </tfoot>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <th scope="row">3</td>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+                <td>@fat</td>
+              </tr>
+            </tbody>
+            
+          </table>
+        </div>
+      </div>
+  -->
+
+{% endblock content %}

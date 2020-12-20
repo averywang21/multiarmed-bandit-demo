@@ -1,0 +1,170 @@
+{% extends "layout.html" %}
+{% block content %}
+
+  <article class="media content-section">
+    <div class="container">
+      <h1>Multi-armed Bandit Trial</h1>
+      <div class="row">
+        <div class="col">
+          <h4>Current Score: 9</h4>
+        </div>
+        <div class="col">
+          <h4>Average Probability: 70%</h4>
+        </div>
+        <div class="col">
+          <h4>Attempts Remaining: 3</h4>
+        </div>
+      </div>
+      <br>
+
+      <div class="row"> 
+        <div class="col-sm-12">
+          <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">3</div>
+            <div class="progress-bar bg-secondary" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">7</div>
+            <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">4</div>
+          </div>
+        </div>
+        <hr>
+      </div>
+      
+      <div class="row">
+        <div class="col-sm-12">
+          <table class="table table-hover">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Success/Attempts</th>
+                  <th scope="col">Estimated p</th>
+                  <th scope="col">95% Confidence Interval</th>
+                  <th scope="col">Action</th>
+                  <th scope="col">Last Result</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Machine 1</th>
+                  <td>2/5</td>
+                  <td>0.40</td>
+                  <td>[0.31, 0.45]</td>
+                  <td>
+                    <button type="button" class="btn btn-outline-primary btn-sm">Pull Lever</button>
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th scope="row">Machine 2</th>
+                  <td>0/0</td>
+                  <td>0.50</td>
+                  <td>[0.00, 1.00]</td>
+                  <td>
+                    <button type="button" class="btn btn-outline-primary btn-sm">Pull Lever</button>
+                  </td>
+                  <td>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Machine 3</th>
+                  <td>40/80</td>
+                  <td>0.50</td>
+                  <td>[0.48, 0.52]</td>
+                  <td>
+                    <button type="button" class="btn btn-outline-primary btn-sm">Pull Lever</button>
+                  </td>
+                  <td>
+                    <div id="#feedback">
+                      <span class="badge badge-pill badge-success">Success +1</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Abstain</th>
+                  <td colspan="3"></td>
+                  <td>
+                    <button type="button" class="btn btn-outline-secondary btn-sm">Abstain</button>
+                  </td>
+                  <td>
+                  </td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!--
+    <hr>
+      <p>
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">
+          Alpha Predictors
+        </a>
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2">
+          Team Performance
+        </a>
+      </p>
+      <div class="collapse" id="collapseExample1">
+        <div class="card card-body">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm">
+                <h3>MNME</h3>0.45
+              </div>
+              <div class="col-sm">
+                <h3>BRC3</h3>-442
+              </div>
+              <div class="col-sm">
+                <h3>NCSI</h3>15.13
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="collapse" id="collapseExample2">
+        <div class="card card-body">
+          <table class="table table-hover">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Score</th>
+                <th scope="col">Average Probability</th>
+                <th scope="col">Average Regret</th>
+                <th scope="col">Progress</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <th>Aggregate</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+                <td>@fat</td>
+            </tfoot>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <th scope="row">3</td>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+                <td>@fat</td>
+              </tr>
+            </tbody>
+            
+          </table>
+        </div>
+      </div>
+  -->
+{% endblock content %}
